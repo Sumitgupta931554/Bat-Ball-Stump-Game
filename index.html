@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cricket Game</title>
+    <style>
+        body{
+            text-align: center;
+            background-color:darkgray;
+        }
+        .choice{
+            margin-inline: 50px;
+            height: 100px;
+            width: 100px;
+            font-size: 30px;
+            background-color: rgba(73, 243, 73, 0.609);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        img{
+            height: 80px;
+        }
+        #reset-button{
+            background-color:yellow;
+            border: none;
+            border-radius: 25px;
+            height: 50px;
+            width: 100px;
+            cursor: pointer;
+            font-size: 15px;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bat Ball Stump Game</h1>
+    <button class="choice" onclick="
+    let computerChoice=generateComputerChoice();
+    let result=generateResult('Bat',computerChoice);
+    showResult('Bat',computerChoice,result);
+    "><img src="/Practice Set/Project/Cricket Game/images/bat.png" alt="Cricket-Bat"></button>
+    <button class="choice"  onclick="
+    computerChoice=generateComputerChoice();
+    result=generateResult('Ball',computerChoice);
+    showResult('Ball',computerChoice,result);
+    "><img src="/Practice Set/Project/Cricket Game/images/Ball.png" alt="Cricket-Ball"></button>
+    <button class="choice"  onclick="
+    computerChoice=generateComputerChoice();
+    result=generateResult('Stump',computerChoice);
+    showResult('Stump',computerChoice,result);
+    "><img src="/Practice Set/Project/Cricket Game/images/stump.png" alt="Cricket-Stump"></button>
+    <h3 class="UserChoice"></h3>
+    <h3 class="computerChoice"></h3>
+    <h3 class="Status"></h3>
+    <h3 class="Score"></h3>
+    <button id="reset-button" onclick="localStorage.clear();
+    score.Win=0;score.Loss=0;score.Tie=0;
+    showResult();
+    ">Reset Score</button>
+<script>
+let score=JSON.parse(localStorage.getItem('Score'))||{
+    Win:0,
+    Loss:0,
+    Tie:0,
+}
+score.displayResult=function(){
+        return `Score : Win:${score.Win} , Loss:${score.Loss} ,Tie:${score.Tie}`
+};
+function generateComputerChoice(){
+    let random= Math.random()*3;
+    if(random<=1){
+        return 'Bat';
+    }else if(random<=2){
+        return 'Ball';
+    }else{
+        return 'Stump';
+    }
+}
+function generateResult(userMove,computerMove,result){
+    if(userMove==='Bat'){
+        if(computerMove==='Bat'){
+            score.Tie++;
+            return `It's Tie`;
+        }else if(computerMove==='Ball'){
+            score.Win++;
+            return 'You Win';
+        }else{
+            score.Loss++;
+            return 'You Loss';
+        }
+    }else if(userMove==='Ball'){
+        if(computerMove==='Bat'){
+            score.Loss++;
+            return 'You Loss';
+        }else if(computerMove==='Ball'){
+            score.Tie++;
+            return `It's Tie`;
+        }else{
+            score.Win++;
+            return 'You Win';
+        }
+    }else{
+        if(computerMove==='Bat'){
+            score.Win++;
+            return 'You Win';
+        }else if(computerMove==='Ball'){
+            score.Loss++;
+            return 'You Loss';
+        }else{
+            score.Tie++;
+            return `It's Tie`;
+        }
+    }
+}
+function showResult(userMove,computerMove,finalResult){
+    localStorage.setItem('Score',JSON.stringify(score));
+    document.querySelector('.UserChoice').innerText=userMove!==undefined?`You has Choosen ${userMove}`:'';
+    document.querySelector('.computerChoice').innerText=computerMove!==undefined?`Computer has Choose ${computerMove}`:'';
+    document.querySelector('.Status').innerText=finalResult||'';
+    document.querySelector('.Score').innerText=score.displayResult();
+    
+}
+</script>
+</body>
+</html>
